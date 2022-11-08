@@ -15,6 +15,9 @@ const App = () => {
   // Use the hooks thirdweb give us.
   const address = useAddress();
   const network = useNetwork();
+  const [mintInProcess, setMintInProcess] = useState(false);
+  const [minted, setMinted] = useState(false);
+  const [mintError, setMintError] = useState(false);
 
   console.log("👋 Address:", address);
 
@@ -184,7 +187,7 @@ useEffect(() => {
   if (hasClaimedNFT) {
     return (
       <div className="member-page">
-        <h1>🍪DAO Member Page</h1>
+        <h1>🍪Gritnova DAO Member Page</h1>
         <p>Congratulations on being a member</p>
         <div>
           <div>
@@ -340,23 +343,35 @@ useEffect(() => {
   // Render mint nft screen.
   return (
     <div className="mint-nft">
-      <h1>Mint your free 🍪DAO Membership NFT</h1>
+      <h1>Mint your free 🍪GritnovaDAO Membership NFT</h1>
       <div className="btn-hero">
         <Web3Button
           contractAddress={editionDropAddress}
           action={(contract) => {
             contract.erc1155.claim(0, 1);
           }}
+          onClick={()=>{
+            setMintInProcess(true);
+          }}
+          onSubmit={()=>{
+            setMintInProcess(true);
+          }}
           onSuccess={() => {
+            setMinted(true);
             console.log(
               `🌊 Successfully Minted! Check it out on OpenSea: https://testnets.opensea.io/assets/${editionDrop.getAddress()}/0`,
             );
           }}
           onError={(error) => {
+            setMintError(true);
             console.error('Failed to mint NFT', error);
           }}
         >
-          Mint your NFT (FREE)
+          {!mintInProcess
+            ? "Mint your NFT (FREE)"
+            : "Minting..."
+          }
+          
         </Web3Button>
       </div>
     </div>
